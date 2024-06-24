@@ -1,6 +1,6 @@
 # Remote infant studies of early learning (RISE): Scalable online replications of key findings in infant cognitive development.
 
-This repo was created primarily to serve as a hub for data sharing and provides codes that were written to generate findings in our manuscript. 
+This repo was created primarily to serve as a hub for data sharing and provide codes that were written to generate findings in our manuscript. 
 
 ## Data 
 
