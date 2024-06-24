@@ -68,22 +68,22 @@ Outcome is % frames looking at social stimulus (person_good).
 mod <- lmerTest::lmer(person_good ~ Age + (1|response_uuid) + (1|Trial), geosocial)
 summary(mod)
 
-#test whether beta is different than 0.5 for the overall cohort. Obj contains estimate and p-values.
+#test whether beta is different than 0.5 for the overall cohort. Obj contains estimate and p-value.
 obj <- summary(glht(mod, linfct = c("(Intercept) + Age12/2 = 0.5")))
 #confidence interval
 confint(obj)
 
-#test whether beta is different than 0.5 for Age 6. Obj contains estimate and p-values.
+#test whether beta is different than 0.5 for Age 6. Obj contains estimate and p-value.
 obj <- summary(glht(mod, linfct = c("(Intercept)  = 0.5")))
 #confidence interval
 confint(obj)
 
-#test whether beta is different than 0.5 for Age 12. Obj contains estimate and p-values.
+#test whether beta is different than 0.5 for Age 12. Obj contains estimate and p-value.
 obj <- summary(glht(mod, linfct = c("(Intercept) + Age12 = 0.5")))
 #confidence interval
 confint(obj)
 
-#test whether beta between Age 12 - Age 6 is different than 0. Obj contains estimate and p-values.
+#test whether beta between Age 12 - Age 6 is different than 0. Obj contains estimate and p-value.
 obj <- summary(glht(mod, linfct = c("Age12 = 0")))
 #confidence interval
 confint(obj)
@@ -95,39 +95,39 @@ Outcome is % frames looking at novel stimulus (novel_good).
 
 ### Among social/face trials:
 
-```{r, eval = T}
+```{r}
 df <- vpc %>% mutate(Stimulus.type = factor(Stimulus.type, levels = c("S", "NS")))
 
 mod <- lmerTest::lmer(novel_good ~ Stimulus.type*Age + (1|response_uuid) + (1|Trial), df)
 summary(mod)
 
-#test whether beta is different than 0.5 for the overall cohort. Obj contains estimate and p-values.
+#test whether beta is different than 0.5 for the overall cohort. Obj contains estimate and p-value.
 obj <- summary(glht(mod, linfct = c("(Intercept) + Age12/2 = 0.5")))
 #confidence interval
 confint(obj)
 
-#test whether beta is different than 0.5 for Age 6. Obj contains estimate and p-values.
+#test whether beta is different than 0.5 for Age 6. Obj contains estimate and p-value.
 obj <- summary(glht(mod, linfct = c("(Intercept)  = 0.5")))
 #confidence interval
 confint(obj)
 
-#test whether beta is different than 0.5 for Age 12. Obj contains estimate and p-values.
+#test whether beta is different than 0.5 for Age 12. Obj contains estimate and p-value.
 obj <- summary(glht(mod, linfct = c("(Intercept) + Age12 = 0.5")))
 #confidence interval
 confint(obj)
 
-#test whether beta between Age 12 - Age 6 is different than 0. Obj contains estimate and p-values.
+#test whether beta between Age 12 - Age 6 is different than 0. Obj contains estimate and p-value.
 obj <- summary(glht(mod, linfct = c("Age12 = 0")))
 #confidence interval
 confint(obj)
 
-#test whether the effect age is different between NS and S trials. Obj contains estimate and p-values.
+#test whether the effect age is different between NS and S trials. Obj contains estimate and p-value.
 obj <- summary(glht(mod, linfct = c("Age12:Stimulus.typeNS = 0")))
 #confidence interval
 confint(obj)
 ```
 
-### Repeat the previous chunk but change NS to reference stimulus type to obtain estimates, 95% CIs, and p-values for non-social/fribble trials.
+### Repeat the previous chunk but change NS to reference stimulus type to obtain estimates, 95% CIs, and p-value for non-social/fribble trials.
 
 ## AV
 
@@ -135,32 +135,32 @@ Outcome is % frames looking at synchronous stimulus (synch_good).
 
 ### Among social trials
 
-```{r, eval = T}
+```{r}
 df <-  av  %>% mutate(Stimulus.type = factor(Stimulus.type, levels = c("Social", "Nonsocial")))
 mod <- lmerTest::lmer(synch_good ~ Age*Stimulus.type + (1|response_uuid) + (1|Trial), df)
 summary(mod)
 
-#test whether beta is different than 0.5 for the overall cohort. Obj contains estimate and p-values.
+#test whether beta is different than 0.5 for the overall cohort. Obj contains estimate and p-value.
 obj <- summary(glht(mod, linfct = c("(Intercept) + Age12/2 = 0.5")))
 #confidence interval
 confint(obj)
 
-#test whether beta is different than 0.5 for Age 6. Obj contains estimate and p-values.
+#test whether beta is different than 0.5 for Age 6. Obj contains estimate and p-value.
 obj <- summary(glht(mod, linfct = c("(Intercept)  = 0.5")))
 #confidence interval
 confint(obj)
 
-#test whether beta is different than 0.5 for Age 12. Obj contains estimate and p-values.
+#test whether beta is different than 0.5 for Age 12. Obj contains estimate and p-value.
 obj <- summary(glht(mod, linfct = c("(Intercept) + Age12 = 0.5")))
 #confidence interval
 confint(obj)
 
-#test whether beta between Age 12 - Age 6 is different than 0. Obj contains estimate and p-values.
+#test whether beta between Age 12 - Age 6 is different than 0. Obj contains estimate and p-value.
 obj <- summary(glht(mod, linfct = c("Age12 = 0")))
 #confidence interval
 confint(obj)
 
-#test whether the effect age is different between NS and S trials. Obj contains estimate and p-values.
+#test whether the effect age is different between NS and S trials. Obj contains estimate and p-value.
 obj <- summary(glht(mod, linfct = c("Age12:Stimulus.typeNonsocial = 0")))
 #confidence interval
 confint(obj)
@@ -174,27 +174,27 @@ Outcome is proportion of trials with an AEM (aem_prop).
 
 ### Block 1
 
-```{r, eval = T}
+```{r}
 df <- prediction  %>% mutate(block = factor(block, levels = c("Block 1", "Block 2"))) 
 mod <- lmer(aem_prop ~ Age*block + (1 | response_uuid), df)
 summary(mod)
 
-#test whether beta is different than 0.5 for the overall cohort. Obj contains estimate and p-values.
+#test whether beta is different than 0.5 for the overall cohort. Obj contains estimate and p-value.
 obj <- summary(glht(mod, linfct = c("(Intercept) + Age12/2 = 0.5")))
 #confidence interval
 conf <- confint(obj)
 
-#test whether beta is different than 0.5 for Age 6. Obj contains estimate and p-values.
+#test whether beta is different than 0.5 for Age 6. Obj contains estimate and p-value.
 obj <- summary(glht(mod, linfct = c("(Intercept) = 0.5")))
 #confidence interval
 conf <- confint(obj)
 
-#test whether beta is different than 0.5 for Age 12. Obj contains estimate and p-values.
+#test whether beta is different than 0.5 for Age 12. Obj contains estimate and p-value.
 obj <- summary(glht(mod, linfct = c("(Intercept) + Age12 = 0.5")))
 #confidence interval
 conf <- confint(obj)
 
-#test whether beta between Age 12 - Age 6 is different than 0. Obj contains estimate and p-values.
+#test whether beta between Age 12 - Age 6 is different than 0. Obj contains estimate and p-value.
 obj <- summary(glht(mod, linfct = c("Age12 = 0")))
 #confidence interval
 conf <- confint(obj)
@@ -211,22 +211,22 @@ Outcome is % target - % distracter (diff).
 mod <- lmerTest::lmer(diff ~ Age + (1|response_uuid) + (1|Word_Pair), word_comprehension)
 summary(mod)
 
-#test whether beta is different than 0 for the overall cohort. Obj contains estimate and p-values.
+#test whether beta is different than 0 for the overall cohort. Obj contains estimate and p-value.
 obj <- summary(glht(mod, linfct = c("(Intercept) + Age12/2 = 0")))
 #confidence interval
 confint(obj)
 
-#test whether beta is different than 0 for Age 6. Obj contains estimate and p-values.
+#test whether beta is different than 0 for Age 6. Obj contains estimate and p-value.
 obj <- summary(glht(mod, linfct = c("(Intercept)  = 0")))
 #confidence interval
 confint(obj)
 
-#test whether beta is different than 0 for Age 12. Obj contains estimate and p-values.
+#test whether beta is different than 0 for Age 12. Obj contains estimate and p-value.
 obj <- summary(glht(mod, linfct = c("(Intercept) + Age12 = 0")))
 #confidence interval
 confint(obj)
 
-#test whether beta between Age 12 - Age 6 is different than 0. Obj contains estimate and p-values.
+#test whether beta between Age 12 - Age 6 is different than 0. Obj contains estimate and p-value.
 obj <- summary(glht(mod, linfct = c("Age12 = 0")))
 #confidence interval
 confint(obj)
@@ -238,7 +238,7 @@ Outcome is % frames looking at changing stimulus (change_good).
 
 ## When five-item constant stream (bigger amount is changing)
 
-```{r, eval = T}
+```{r}
 df <-  numeracy  %>% mutate(Stimulus.type = factor(Stimulus.type, levels = c("Big", "Small"))) 
 mod <- lmerTest::lmer(change_good ~ Age*Stimulus.type + (1|response_uuid) + (1|Trial), df)
 summary(mod)
@@ -269,39 +269,39 @@ obj <- summary(glht(mod, linfct = c("Age12:TypeBig = 0")))
 confint(obj)
 ```
 
-Repeat the previous chunk but change Small to reference stimulus type for when 20-item is constant (small is changing)
+### Repeat the previous chunk but change Small to reference stimulus type for when 20-item is constant (small is changing)
 
 ## Helper/Hinderer
 
 Outcome is % frames looking at helping stimulus (helper_good).
 
-```{r, eval = T}
+```{r}
 mod <- lmerTest::lmer(helper_good ~ Age + (1|response_uuid) + (1|Trial), helperhinder)
 summary(mod)
 
-#test whether beta is different than 0.5 for the overall cohort. Obj contains estimate and p-values.
+#test whether beta is different than 0.5 for the overall cohort. Obj contains estimate and p-value.
 obj <- summary(glht(mod, linfct = c("(Intercept) + Age12/2 = 0.5")))
 #confidence interval
 confint(obj)
 
-#test whether beta is different than 0.5 for Age 6. Obj contains estimate and p-values.
+#test whether beta is different than 0.5 for Age 6. Obj contains estimate and p-value.
 obj <- summary(glht(mod, linfct = c("(Intercept)  = 0.5")))
 #confidence interval
 confint(obj)
 
-#test whether beta is different than 0.5 for Age 12. Obj contains estimate and p-values.
+#test whether beta is different than 0.5 for Age 12. Obj contains estimate and p-value.
 obj <- summary(glht(mod, linfct = c("(Intercept) + Age12 = 0.5")))
 #confidence interval
 confint(obj)
 
-#test whether beta between Age 12 - Age 6 is different than 0. Obj contains estimate and p-values.
+#test whether beta between Age 12 - Age 6 is different than 0. Obj contains estimate and p-value.
 obj <- summary(glht(mod, linfct = c("Age12 = 0")))
 #confidence interval
 confint(obj)
 ```
 
 
-## PLOT
+# PLOT
 
 Fill in the correct data and y for each task. The code produces a violin plot with individual data points of each subject, split by age groups. 
 
