@@ -4,8 +4,10 @@ This repo was created primarily to serve as a hub for data sharing and provide c
 
 ## Data 
 
-Folder "Data" contains the final data files (.csv) for all 7 tasks.
+Folder "Data" contains the final data files (.csv) for all 7 tasks for Aim 1.
+Folder "Data_Aim2" contains the final data files (.csv) for all 7 tasks for Aim 2.
+
 
 ## R Code
 
-Analysis codes are stored under "Code_analysis_RISE.Rmd" and can be opened in RStudio. The code is presented as a tutorial, thus it contains information on the required packages, task-by-task instruction regarding names of the outcome, covariate, and random effect variables, as well as the actual models. Code for the violin plot is also included. 
+Analysis codes for Aim 1 are stored under "Code_analysis_RISE.Rmd" and for Aim 2 are stored under "Code_analysis_Aim2". These files can be opened in RStudio. The code is presented as a tutorial, thus it contains information on the required packages, task-by-task instruction regarding names of the outcome, covariate, and random effect variables, as well as the actual models. Code for the violin plot is also included. 
