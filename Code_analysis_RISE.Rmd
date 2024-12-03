@@ -33,23 +33,23 @@ library(multcomp)
 #Note: read.csv creates an extra column named X for row number, thus we're excluding it using [,-1].
 #Recode Age to be a factor variable with Age 6 as the reference group.
 
-geosocial <- read.csv("Data/geosocial.csv")[,-1] %>% mutate(Age = factor(Age, levels = c(6, 12)))
+geosocial <- read.csv("Data_Aim1/geosocial.csv")[,-1] %>% mutate(Age = factor(Age, levels = c(6, 12)))
 
-vpc <- read.csv("Data/vpc.csv")[,-1] %>% mutate(Age = factor(Age, levels = c(6, 12)))
-
-
-av <- read.csv("Data/audiovisual.csv")[,-1] %>% mutate(Age = factor(Age, levels = c(6, 12)))
-
-prediction <- read.csv("Data/prediction.csv")[,-1] %>% mutate(Age = factor(Age, levels = c(6, 12)))
+vpc <- read.csv("Data_Aim1/vpc.csv")[,-1] %>% mutate(Age = factor(Age, levels = c(6, 12)))
 
 
-word_comprehension <- read.csv("Data/word_comprehension.csv")[,-1] %>% mutate(Age = factor(Age, levels = c(6, 12)))
+av <- read.csv("Data_Aim1/audiovisual.csv")[,-1] %>% mutate(Age = factor(Age, levels = c(6, 12)))
+
+prediction <- read.csv("Data_Aim1/prediction.csv")[,-1] %>% mutate(Age = factor(Age, levels = c(6, 12)))
 
 
-numeracy <- read.csv("Data/numeracy.csv")[,-1] %>% mutate(Age = factor(Age, levels = c(6, 12)))
+word_comprehension <- read.csv("Data_Aim1/word_comprehension.csv")[,-1] %>% mutate(Age = factor(Age, levels = c(6, 12)))
 
 
-helperhinder <- read.csv("Data/helperhinderer.csv")[,-1] %>% mutate(Age = factor(Age, levels = c(6, 12)))
+numeracy <- read.csv("Data_Aim1/numeracy.csv")[,-1] %>% mutate(Age = factor(Age, levels = c(6, 12)))
+
+
+helperhinder <- read.csv("Data_Aim1/helperhinderer.csv")[,-1] %>% mutate(Age = factor(Age, levels = c(6, 12)))
 
 ```
 
