@@ -1,0 +1,204 @@
+---
+title: "RISE combined Aims 1 & 2"
+author: "Mike Frank"
+date: "2024-12-03"
+output: html_document
+---
+
+
+```{r setup, include=T}
+knitr::opts_chunk$set(echo = T, warning = F, message =  F)
+
+# load in required packages
+library(tidyverse)
+library(here)
+library(janitor)
+library(lme4)
+library(emmeans)
+```
+
+
+# Read in data
+
+Please refer to the data files we have uploaded on Github under folder "Data_Aim2" and change the directory as appropriate.
+Note: read.csv creates an extra column named X for row number, thus we're excluding it using [,-1].
+Recode Age to be a factor variable with Age 6 as the reference group.
+
+
+```{r}
+tasks <- c("geosocial", "vpc", "audiovisual", "prediction", 
+           "word_comprehension", "numeracy", "helperhinderer")
+
+d_raw <- map_df(tasks, function(x) {
+  a1 <- read_csv(here("Data_Aim1",paste0(x,".csv")), show_col_types = FALSE) |> mutate(version = "aim1")
+  a2 <- read_csv(here("Data_Aim2",paste0(x,".csv")), show_col_types = FALSE) |> mutate(version = "aim2")
+  d <- bind_rows(a1,a2) |>
+    mutate(task = x)
+}) |>
+  janitor::clean_names() |>
+  select(-x1) 
+```
+
+Outcomes:
+
+* Geosocial: Outcome is % frames looking at social stimulus (person_good).
+* VPC: Outcome is % frames looking at novel stimulus (novel_good).
+* AV: Outcome is % frames looking at synchronous stimulus (synch_good).
+* Prediction: Outcome is proportion of trials with an AEM (aem_prop). 
+* Word Comprehension: Outcome is % target - % distracter (diff). 
+* Numeracy: Outcome is % frames looking at changing stimulus (change_good).
+* Helper/Hinderer: Outcome is % frames looking at helping stimulus (helper_good).
+
+
+```{r}
+d <- d_raw |>
+  mutate(measure = case_when(task == "geosocial" ~ person_good, 
+                             task == "vpc" & version == "aim1" ~ novel_good, 
+                             task == "vpc" & version == "aim2" ~ novel_good_avg, 
+                             task == "audiovisual" ~ synch_good, 
+                             task == "prediction" ~ aem_prop,
+                             task == "word_comprehension" ~ diff + .5,
+                             task == "numeracy" ~ change_good,
+                             task == "helperhinderer" ~ helper_good), 
+         sub_id = response_uuid) |>
+  select(version, sub_id, age, task, trial, usable_frames_percent, measure, stimulus_type, block) |>
+  mutate(age = as_factor(age), 
+         task = fct_relevel(task, tasks))
+
+d_sub <- d |>
+  group_by(version, sub_id, age, task) |>
+  summarise(measure = mean(measure, na.rm = TRUE)) |>
+  filter(!is.nan(measure))
+```
+
+Plot. 
+
+
+```{r}
+ggplot(d_sub, aes(x = age, y = measure, col = version)) + 
+  geom_point(alpha = .2, position = position_dodge(width = .4)) +
+  stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width = .4), 
+               pch = 2) + 
+  geom_hline(yintercept = .5, lty = 2) + 
+  facet_wrap(~task) + 
+  ylim(.3, 1) + 
+  xlab("Proportion looking") +
+  ggthemes::theme_few()
+  
+```
+# Stats
+
+vpc, av, and prediction have interactions (stimulus_type, stimulus_type, block)
+
+## Geosocial 
+
+```{r}
+geo_mod <- lmer(measure ~ age * version + (1 | sub_id), filter(d, task == "geosocial"))
+summary(geo_mod)
+```
+
+```{r}
+emmeans(geo_mod, ~age * version)
+```
+
+## VPC
+
+The stimulus type variable is missing for the Aim 2 VPC. 
+
+```{r}
+vpc_mod <- lmer(measure ~ age * stimulus_type * version + (1 | sub_id),
+                filter(d, task == "vpc"))
+summary(vpc_mod)
+```
+
+```{r}
+emmeans(vpc_mod, ~age * version * stimulus_type)
+```
+## Audiovisual
+
+The stimulus type variable is missing for the Aim 2 Audivisual 
+
+```{r}
+av_mod <- lmer(measure ~ age * stimulus_type * version + (1 | sub_id),
+                filter(d, task == "audiovisual"))
+summary(av_mod)
+```
+
+```{r}
+emmeans(av_mod, ~age * version * stimulus_type)
+```
+
+
+## Prediction
+
+Let's first look across blocks and then within. 
+
+```{r}
+prediction_mod <- lmer(measure ~ age * version + (1 | sub_id),
+                filter(d, task == "prediction"))
+summary(prediction_mod)
+```
+
+```{r}
+emmeans(prediction_mod, ~age * version)
+```
+
+
+
+
+```{r}
+prediction_block_mod <- lmer(measure ~ age * block * version + (1 | sub_id),
+                filter(d, task == "prediction"))
+summary(prediction_block_mod)
+```
+
+```{r}
+emmeans(prediction_mod, ~age * version * block)
+```
+
+
+## Word comprehension 
+
+```{r}
+word_mod <- lmer(measure ~ age * version + (1 | sub_id), filter(d, task == "word_comprehension"))
+summary(word_mod)
+```
+
+```{r}
+emmeans(word_mod, ~age *version)
+```
+
+## Numeracy
+
+Also a stimulus type interaction.
+
+```{r}
+numeracy_mod <- lmer(measure ~ age * version + (1 | sub_id), 
+                     filter(d, task == "numeracy"))
+summary(numeracy_mod)
+```
+
+```{r}
+emmeans(numeracy_mod, ~ age * version)
+```
+
+```{r}
+numeracy_mod_stim <- lmer(measure ~ age * stimulus_type * version + (1 | sub_id), 
+                     filter(d, task == "numeracy"))
+summary(numeracy_mod_stim)
+```
+
+```{r}
+emmeans(numeracy_mod, ~ age * stimulus_type * version)
+```
+## Helper hinderer
+
+
+```{r}
+helperhinderer_mod <- lmer(measure ~ age * version + (1 | sub_id), filter(d, task == "helperhinderer"))
+summary(helperhinderer_mod)
+```
+
+```{r}
+emmeans(helperhinderer_mod, ~age * version)
+```
