@@ -1,0 +1,78 @@
+---
+title: "RISE combined Aims 1 & 2"
+author: "Mike Frank"
+date: "2024-12-03"
+output: html_document
+---
+
+
+```{r setup, include=T}
+knitr::opts_chunk$set(echo = T, warning = F, message =  F)
+
+# load in required packages
+library(tidyverse)
+library(here)
+library(janitor)
+```
+
+
+# Read in data
+
+Please refer to the data files we have uploaded on Github under folder "Data_Aim2" and change the directory as appropriate.
+Note: read.csv creates an extra column named X for row number, thus we're excluding it using [,-1].
+Recode Age to be a factor variable with Age 6 as the reference group.
+
+
+```{r}
+tasks <- c("geosocial", "vpc", "audiovisual", "prediction", 
+           "word_comprehension", "numeracy", "helperhinderer")
+
+d_raw <- map_df(tasks, function(x) {
+  a1 <- read_csv(here("Data",paste0(x,".csv")), show_col_types = FALSE) |> mutate(version = "aim1")
+  a2 <- read_csv(here("Data_Aim2",paste0(x,".csv")), show_col_types = FALSE) |> mutate(version = "aim2")
+  d <- bind_rows(a1,a2) |>
+    mutate(task = x)
+}) |>
+  janitor::clean_names() |>
+  select(-x1) 
+```
+
+Outcomes:
+
+* Geosocial: Outcome is % frames looking at social stimulus (person_good).
+* VPC: Outcome is % frames looking at novel stimulus (novel_good).
+* AV: Outcome is % frames looking at synchronous stimulus (synch_good).
+* Prediction: Outcome is proportion of trials with an AEM (aem_prop). 
+* Word Comprehension: Outcome is % target - % distracter (diff). 
+* Numeracy: Outcome is % frames looking at changing stimulus (change_good).
+* Helper/Hinderer: Outcome is % frames looking at helping stimulus (helper_good).
+
+
+```{r}
+d <- d_raw |>
+  mutate(measure = case_when(task == "geosocial" ~ person_good, 
+                             task == "vpc" ~ novel_good, 
+                             task == "audiovisual" ~ synch_good, 
+                             task == "prediction" ~ aem_prop,
+                             task == "word_comprehension" ~ diff,
+                             task == "numeracy" ~ change_good,
+                             task == "helperhinderer" ~ helper_good), 
+         sub_id = response_uuid) |>
+  select(version, sub_id, age, task, trial, usable_frames_percent, measure) |>
+  mutate(age = as_factor(age))
+
+d_sub <- d |>
+  group_by(version, sub_id, age, task) |>
+  summarise(measure = mean(measure, na.rm = TRUE))
+```
+
+Plot. 
+
+
+```{r}
+ggplot(d_sub, aes(x = age, y = measure, col = version)) + 
+  stat_summary(fun.data = "mean.cl.boot") + 
+  geom_jitter(alpha = .5, width = .1) +
+  facet_wrap(~task)
+```
+
