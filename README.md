@@ -4,7 +4,7 @@ This repo was created primarily to serve as a hub for data sharing and provide c
 
 ## Data 
 
-Folder "Data" contains the final data files (.csv) for all 7 tasks for Aim 1.
+Folder "Data_Aim1" contains the final data files (.csv) for all 7 tasks for Aim 1.
 Folder "Data_Aim2" contains the final data files (.csv) for all 7 tasks for Aim 2.
 
 
