@@ -30,8 +30,12 @@ tasks <- c("geosocial", "vpc", "audiovisual", "prediction",
            "word_comprehension", "numeracy", "helperhinderer")
 
 d_raw <- map_df(tasks, function(x) {
-  a1 <- read_csv(here("Data_Aim1",paste0(x,".csv")), show_col_types = FALSE) |> mutate(version = "aim1")
-  a2 <- read_csv(here("Data_Aim2",paste0(x,".csv")), show_col_types = FALSE) |> mutate(version = "aim2")
+  a1 <- read_csv(here("Data_Aim1",paste0(x,".csv")), show_col_types = FALSE) |> mutate(version = "aim1") |>
+    janitor::clean_names() 
+  
+  a2 <- read_csv(here("Data_Aim2",paste0(x,".csv")), show_col_types = FALSE) |> mutate(version = "aim2") |>
+    janitor::clean_names() 
+  
   d <- bind_rows(a1,a2) |>
     mutate(task = x)
 }) |>
@@ -102,7 +106,6 @@ emmeans(geo_mod, ~age * version)
 
 ## VPC
 
-The stimulus type variable is missing for the Aim 2 VPC. 
 
 ```{r}
 vpc_mod <- lmer(measure ~ age * stimulus_type * version + (1 | sub_id),
@@ -115,16 +118,17 @@ emmeans(vpc_mod, ~age * version * stimulus_type)
 ```
 ## Audiovisual
 
-The stimulus type variable is missing for the Aim 2 Audivisual 
+In Aim 2, only the social portion was retained. 
 
 ```{r}
-av_mod <- lmer(measure ~ age * stimulus_type * version + (1 | sub_id),
-                filter(d, task == "audiovisual"))
+av_mod <- lmer(measure ~ age * version + (1 | sub_id),
+               filter(d, task == "audiovisual", 
+                     is.na(stimulus_type) | stimulus_type == "Social"))
 summary(av_mod)
 ```
 
 ```{r}
-emmeans(av_mod, ~age * version * stimulus_type)
+emmeans(av_mod, ~age * version)
 ```
 
 
@@ -134,7 +138,7 @@ Let's first look across blocks and then within.
 
 ```{r}
 prediction_mod <- lmer(measure ~ age * version + (1 | sub_id),
-                filter(d, task == "prediction"))
+                       filter(d, task == "prediction"))
 summary(prediction_mod)
 ```
 
@@ -147,7 +151,7 @@ emmeans(prediction_mod, ~age * version)
 
 ```{r}
 prediction_block_mod <- lmer(measure ~ age * block * version + (1 | sub_id),
-                filter(d, task == "prediction"))
+                             filter(d, task == "prediction"))
 summary(prediction_block_mod)
 ```
 
@@ -172,24 +176,15 @@ emmeans(word_mod, ~age *version)
 Also a stimulus type interaction.
 
 ```{r}
-numeracy_mod <- lmer(measure ~ age * version + (1 | sub_id), 
+numeracy_mod <- lmer(measure ~ age * version * stimulus_type + (1 | sub_id), 
                      filter(d, task == "numeracy"))
 summary(numeracy_mod)
 ```
 
 ```{r}
-emmeans(numeracy_mod, ~ age * version)
+emmeans(numeracy_mod, ~ age * version * stimulus_type)
 ```
 
-```{r}
-numeracy_mod_stim <- lmer(measure ~ age * stimulus_type * version + (1 | sub_id), 
-                     filter(d, task == "numeracy"))
-summary(numeracy_mod_stim)
-```
-
-```{r}
-emmeans(numeracy_mod, ~ age * stimulus_type * version)
-```
 ## Helper hinderer
 
 
