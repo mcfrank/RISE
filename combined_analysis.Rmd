@@ -81,10 +81,9 @@ ggplot(d_sub, aes(x = age, y = measure, col = version)) +
                pch = 2) + 
   geom_hline(yintercept = .5, lty = 2) + 
   facet_wrap(~task) + 
-  ylim(.3, 1) + 
+  ylim(0, 1) + 
   xlab("Proportion looking") +
   ggthemes::theme_few()
-  
 ```
 # Stats
 
