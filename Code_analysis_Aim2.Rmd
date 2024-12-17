@@ -96,48 +96,9 @@ Outcome is % frames looking at novel stimulus (novel_good_avg).
 ### Among social/face trials:
 
 ```{r, eval = T}
-df <- vpc %>% mutate(Stimulus.type = factor(Stimulus.type, levels = c("S", "NS")))
+df <- vpc %>% mutate(Stimulus.type = factor(Stimulus.type, levels = c("Social", "Nonsocial")))
 
 mod <- lmerTest::lmer(novel_good_avg ~ Stimulus.type*Age + (1|response_uuid) + (1|Trial), df)
-summary(mod)
-
-#test whether beta is different than 0.5 for the overall cohort. Obj contains estimate and p-values.
-obj <- summary(glht(mod, linfct = c("(Intercept) + Age12/2 = 0.5")))
-#confidence interval
-confint(obj)
-
-#test whether beta is different than 0.5 for Age 6. Obj contains estimate and p-values.
-obj <- summary(glht(mod, linfct = c("(Intercept)  = 0.5")))
-#confidence interval
-confint(obj)
-
-#test whether beta is different than 0.5 for Age 12. Obj contains estimate and p-values.
-obj <- summary(glht(mod, linfct = c("(Intercept) + Age12 = 0.5")))
-#confidence interval
-confint(obj)
-
-#test whether beta between Age 12 - Age 6 is different than 0. Obj contains estimate and p-values.
-obj <- summary(glht(mod, linfct = c("Age12 = 0")))
-#confidence interval
-confint(obj)
-
-#test whether the effect age is different between NS and S trials. Obj contains estimate and p-values.
-obj <- summary(glht(mod, linfct = c("Age12:Stimulus.typeNS = 0")))
-#confidence interval
-confint(obj)
-```
-
-### Repeat the previous chunk but change NS to reference stimulus type to obtain estimates, 95% CIs, and p-values for non-social/fribble trials.
-
-## AV
-
-Outcome is % frames looking at synchronous stimulus (synch_good).
-
-### Among social trials
-
-```{r, eval = T}
-df <-  av  %>% mutate(Stimulus.type = factor(Stimulus.type, levels = c("Social", "Nonsocial")))
-mod <- lmerTest::lmer(synch_good ~ Age*Stimulus.type + (1|response_uuid) + (1|Trial), df)
 summary(mod)
 
 #test whether beta is different than 0.5 for the overall cohort. Obj contains estimate and p-values.
@@ -166,7 +127,38 @@ obj <- summary(glht(mod, linfct = c("Age12:Stimulus.typeNonsocial = 0")))
 confint(obj)
 ```
 
-### Repeat the previous chunk but change Nonsocial to reference stimulus type for non-social/fribble trials 
+### Repeat the previous chunk but change NS to reference stimulus type to obtain estimates, 95% CIs, and p-values for non-social/fribble trials.
+
+## AV
+
+Outcome is % frames looking at synchronous stimulus (synch_good).
+
+
+```{r, eval = T}
+mod <- lmerTest::lmer(synch_good ~ Age*Stimulus.type + (1|response_uuid) + (1|Trial), av)
+summary(mod)
+
+#test whether beta is different than 0.5 for the overall cohort. Obj contains estimate and p-values.
+obj <- summary(glht(mod, linfct = c("(Intercept) + Age12/2 = 0.5")))
+#confidence interval
+confint(obj)
+
+#test whether beta is different than 0.5 for Age 6. Obj contains estimate and p-values.
+obj <- summary(glht(mod, linfct = c("(Intercept)  = 0.5")))
+#confidence interval
+confint(obj)
+
+#test whether beta is different than 0.5 for Age 12. Obj contains estimate and p-values.
+obj <- summary(glht(mod, linfct = c("(Intercept) + Age12 = 0.5")))
+#confidence interval
+confint(obj)
+
+#test whether beta between Age 12 - Age 6 is different than 0. Obj contains estimate and p-values.
+obj <- summary(glht(mod, linfct = c("Age12 = 0")))
+#confidence interval
+confint(obj)
+```
+
 
 ## Prediction
 
@@ -264,7 +256,7 @@ obj <- summary(glht(mod, linfct = c("Age12 = 0")))
 confint(obj)
 
 #test whether the effect age is different between small (5) and big (20) trials.
-obj <- summary(glht(mod, linfct = c("Age12:TypeBig = 0")))
+obj <- summary(glht(mod, linfct = c("Age12:Stimulus.typeBig = 0")))
 #confidence interval
 confint(obj)
 ```
